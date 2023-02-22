@@ -71,4 +71,95 @@ sns.heatmap(bdgcopy.corr(), annot = True) # mapa de calor de las correlaciones
 reports = sv.analyze(bdgcopy)
 reports.show_html(filepath='SWEETVIZ_REPORT.html', open_browser=True)
 
+# BD ENCUESTA DESEMPEÑO EMPLEADO -----------------------------------------------------------------------------
+#@title importar datos generales
+basedd = df= pd.read_csv("/content/drive/MyDrive/Analitica III/Avance 1/manager_survey_data.csv",sep = ",")
+basedd.head()
 
+#Verificación de columnas
+basedd.columns
+
+#Dimensiones de la BD
+basedd.shape
+
+#Tipos de variales en la BD
+basedd.dtypes
+
+#Convertir columnas a minuscula
+basedd.columns= map(str.lower, basedd.columns)
+basedd.head()
+
+#Verificar nulos
+basedd.isnull().sum()
+
+#Copia de seguridad de BD
+baseddcopy=basedd.copy()
+baseddcopy
+
+# crear dataset
+# crear dataset
+dic3 = base = basedd.groupby(['performancerating'])[['employeeid']].sum().sort_values('employeeid', ascending = False).reset_index()
+
+# crear gráfica:
+fig3 = px.pie(base, values = 'employeeid', names ='performancerating',
+             title= '<b>Encuesta desempeño - clasificación de rendimiento<b>',
+             color_discrete_sequence=px.colors.qualitative.G10)
+
+# agregar detalles a la gráfica:
+fig3.update_layout(
+    xaxis_title = 'Año',
+    yaxis_title = 'Precio de venta',
+    template = 'simple_white',
+    title_x = 0.5)
+
+fig3.show()
+
+# BD INFORMACION RETIRO EMPLEADOS -----------------------------------------------------------------------------
+
+#@title importar datos generales
+bdatar= pd.read_csv("/content/drive/MyDrive/Analitica III/Avance 1/retirement_info.csv",sep = ";")
+bdatar.head()
+
+#Verificación de columnas
+bdatar.columns
+
+#Dimensiones de la BD
+bdatar.shape
+
+#Tipos de variales en la BD
+bdatar.dtypes
+
+#Convertir columnas a minuscula
+bdatar.columns= map(str.lower, bdatar.columns)
+bdatar.head()
+
+#Verificar nulos
+bdatar.isnull().sum()
+
+#Visualización de nulos
+bdatar
+
+# llenar valores con un valor particular, dado que en la columna está la opción "Others", los 70 nulos por el momento se dejan, para tratarlos mas adelante.
+bdatar = bdatar.fillna("fired")
+
+#Verificar nulos
+bdatar.isnull().sum()
+
+# crear dataset
+dic = base = bdatar.groupby(['resignationreason'])[['employeeid']].sum().sort_values('employeeid', ascending = False).reset_index()
+#base['resignationreason'] = base['resignationreason'].replace(dic)
+# ExterQual: calidad del material del exterior del edificio
+
+# crear gráfica:
+fig = px.pie(base, values = 'employeeid', names ='resignationreason',
+             title= '<b>Motivo de renuncia<b>',
+             color_discrete_sequence=px.colors.qualitative.G10)
+
+# agregar detalles a la gráfica:
+fig.update_layout(
+    xaxis_title = 'Año',
+    yaxis_title = 'Precio de venta',
+    template = 'simple_white',
+    title_x = 0.5)
+
+fig.show()
