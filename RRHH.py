@@ -163,3 +163,75 @@ fig.update_layout(
     title_x = 0.5)
 
 fig.show()
+
+******************************************************************************
+
+df1= pd.read_csv("/content/drive/MyDrive/Analitica III/Avance 1/employee_survey_data.csv",sep = ",")
+dfd=df1.copy()
+
+#Se miran los datos nulos de la base
+dfd.isnull().sum()
+
+# guardar la información en un diccionario para posteriormente usarla
+diccionario = dfd[['EnvironmentSatisfaction','JobSatisfaction','WorkLifeBalance']].mean().round().to_dict()
+diccionario
+
+#Tratar los datos nulos
+dfd = dfd[['EmployeeID','EnvironmentSatisfaction','JobSatisfaction','WorkLifeBalance']].fillna(diccionario)
+
+based = dfd.groupby(['EnvironmentSatisfaction'])[['EmployeeID']].count().sort_values('EnvironmentSatisfaction').reset_index()
+
+# crear gráfica
+fig = px.pie(based,  values='EmployeeID',names= 'EnvironmentSatisfaction',
+             title= '<b>Nivel de satisfacción del ambiente de trabajo<b>',
+             color_discrete_sequence=px.colors.qualitative.G10)
+
+# agregar detalles a la gráfica
+fig.update_layout(
+    xaxis_title = 'Nivel',
+    yaxis_title = 'Cantidad de empleados',
+    template = 'simple_white',
+    title_x = 0.5)
+
+fig.show()
+
+
+basej = dfd.groupby(['JobSatisfaction'])[['EmployeeID']].count().sort_values('JobSatisfaction', ascending = False).reset_index()
+
+# crear gráfica
+figj = px.pie(basej, values='EmployeeID', names= 'JobSatisfaction',
+             title= '<b>Nivel de satisfacción laboral<b>',
+             color_discrete_sequence=px.colors.qualitative.G10)
+
+# agregar detalles a la gráfica
+figj.update_layout(
+    xaxis_title = 'Nivel',
+    yaxis_title = 'Cantidad de empleados',
+    template = 'simple_white',
+    title_x = 0.5)
+
+figj.show()
+
+
+
+basew = dfd.groupby(['WorkLifeBalance'])[['EmployeeID']].count().sort_values('WorkLifeBalance', ascending = False).reset_index()
+
+# crear gráfica
+figw = px.pie(basew, values='EmployeeID', names = 'WorkLifeBalance',
+             title= '<b>Nivel de conciliación de la vida laboral y personal<b>',
+             color_discrete_sequence=px.colors.qualitative.G10)
+
+# agregar detalles a la gráfica
+figw.update_layout(
+    xaxis_title = 'Nivel',
+    yaxis_title = 'Cantidad de empleados',
+    template = 'simple_white',
+    title_x = 0.5)
+
+figw.show()
+
+
+
+
+
+
